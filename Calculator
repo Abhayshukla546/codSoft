@@ -1,0 +1,78 @@
+import tkinter as tk
+
+def on_button_click(event):
+    # Updating the input field when a button is clicked
+    current_text = input_field.get()
+    button_text = event.widget.cget("text")
+    
+    if button_text == "=":
+        try:
+            result = eval(current_text)
+            input_field.delete(0, tk.END)
+            input_field.insert(tk.END, str(result))
+        except Exception as e:
+            input_field.delete(0, tk.END)
+            input_field.insert(tk.END, "Error")
+    elif button_text == "C":
+        input_field.delete(0, tk.END)
+    else:
+        input_field.insert(tk.END, button_text)
+
+# Creation of the main application window
+root = tk.Tk()
+root.title("Abhay Calculator")
+root.geometry("300x400")
+root.resizable(False, False)
+root.configure(bg="#f0f0f0") #background colour of the window only
+
+# Creation of the input field
+input_field = tk.Entry(root, font=("Helvetica", 24), justify="right", bd=4, relief=tk.RIDGE)
+input_field.pack(padx=10, pady=10, ipadx=8, ipady=8, fill=tk.BOTH)
+
+# Button styling
+button_style = {
+    "font": ("Helvetica", 18),
+    "padx": 20,
+    "pady": 5,  # Change this value to adjust the button's size
+    "bd": 4,
+    "relief": tk.RAISED,
+    "bg": "#e0e0e0",  # Button background color
+    "activebackground": "#232323"  # Button background color when it is clicked
+}
+
+# Define the buttons and their positions
+buttons = [
+    ("7",), ("8",), ("9",), ("/",),
+    ("4",), ("5",), ("6",), ("*",),
+    ("1",), ("2",), ("3",), ("- ",),
+    ("0",), ("(",), (")",), ("+ ",),
+    ("C",), ("=",), (".",), (" ",),
+]
+
+# Create buttons and bind their clicks to the function they perform.    
+button_frame = tk.Frame(root, bg="#f0f0f0")
+button_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+row, col = 1, 0
+for (text,) in buttons:
+    button = tk.Button(button_frame, text=text, **button_style)
+    button.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
+    button.bind("<Button-1>", on_button_click)
+    col += 1
+    if col > 3:
+        col = 0
+        row += 1
+
+# Use grid_rowconfigure and grid_columnconfigure to make the buttons expand with the window resizing
+button_frame.grid_rowconfigure(0, weight=1)
+button_frame.grid_rowconfigure(1, weight=1)
+button_frame.grid_rowconfigure(2, weight=1)
+button_frame.grid_rowconfigure(3, weight=1)
+button_frame.grid_rowconfigure(4, weight=1)
+button_frame.grid_columnconfigure(0, weight=1)
+button_frame.grid_columnconfigure(1, weight=1)
+button_frame.grid_columnconfigure(2, weight=1)
+button_frame.grid_columnconfigure(3, weight=1)
+
+# Run the main event loop
+root.mainloop()
